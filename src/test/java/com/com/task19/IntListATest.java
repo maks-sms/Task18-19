@@ -20,28 +20,28 @@ public class IntListATest {
 
     @Test
     public void emptyList() {
-        int expected = 0;
-        Assertions.assertEquals(expected, list.size());
+        IntListA emptyList = new IntListA();
+        Assertions.assertEquals(0, emptyList.size());
     }
 
     @Test
     public void checkingIndexes() {
         int[] array = new int[]{1, 2, 3, 4};
-
         Assertions.assertArrayEquals(list.toArray(), array);
     }
 
     @Test
     public void deleteByIndex() {
-        int i = list.getByIndex(5);
-        list.removeByIndex(3);
+        int i = list.getByIndex(3);
+        list.removeByIndex(1);
         int j = list.getByIndex(2);
         Assertions.assertEquals(i, j);
     }
 
     @Test
     public void wrongIndexElement() {
-        list.getByIndex(list.size() + 10);
+        Assertions.assertThrows(ArrayIndexOutOfBoundsException.class, () ->
+            list.getByIndex(10));
     }
 
     @Test
