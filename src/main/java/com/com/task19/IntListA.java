@@ -2,57 +2,48 @@ package com.com.task19;
 
 public class IntListA implements IntList {
 
-    int size = 10;
-    int[] arr = new int[size];
-    int top = 0;
+    private int size = 10;
+    private int[] arr = new int[size];
+    private int top = 0;
 
     @Override
     public void add(int i) {
-        if (top == (size - 1)) {
-            int[] newArr = new int[size * 2];
-            System.arraycopy(arr, 0, newArr, 0, top + 1);
-            arr = newArr;
+        if (top >= arr.length) {
+            increaseArr();
         }
-        top++;
         arr[top] = i;
+        top++;
 
     }
 
     @Override
     public void insert(int index, int value) {
-        if (index >= 0) {
-            top++;
-            int in = arr.length - 1;
-            for (int i = in; i >= index; i--) {
-                arr[i] = arr[i - 1];
-            }
-            arr[index] = value;
+        if (top + 1 >= arr.length) {
+            increaseArr();
         }
+        System.arraycopy(arr, index, arr, index + 1, arr.length - 1 - index);
+        arr[index] = value;
+        top++;
     }
 
     @Override
     public void set(int index, int value) {
-        if (index >= 0) {
-            arr[index] = value;
-        }
+        arr[index] = value;
     }
 
     @Override
     public int size() {
-        return top + 1;
+        return top;
     }
 
     @Override
     public int capacity() {
-        return size;
+        return arr.length;
     }
 
     @Override
     public int getByIndex(int index) {
-        if (index >= 0) {
-            return arr[index];
-        }
-        return 0;
+        return arr[index];
     }
 
     @Override
@@ -85,32 +76,40 @@ public class IntListA implements IntList {
 
     @Override
     public void removeByIndex(int index) {
-        if (index >= 0) {
-            int in = top;
-            for (int i = index; i <= in; i++) {
-                arr[i] = arr[i + 1];
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == index) {
+                int[] temporaryArray = new int[arr.length - 1];
+                System.arraycopy(arr, 0, temporaryArray, 0, i);
+                System.arraycopy(arr, i + 1, temporaryArray, i, temporaryArray.length - i);
+                arr = temporaryArray;
+                top--;
             }
-            top--;
         }
     }
 
     @Override
     public IntList subList(int fromIndex, int toIndex) {
-        if (fromIndex >= 0 && toIndex <= top) {
-            IntList subList = new IntListA();
-            int inInd = fromIndex + (toIndex - fromIndex);
-            for (int i = fromIndex; i <= inInd; i++) {
-                subList.add(arr[i]);
-            }
-            return subList;
+        IntList subList = new IntListA();
+        int inInd = fromIndex + (toIndex - fromIndex);
+
+        for (int i = fromIndex; i < inInd; i++) {
+            subList.add(arr[i]);
         }
-        return null;
+        return subList;
+
     }
 
     @Override
     public int[] toArray() {
-        int[] arr = new int[top + 1];
+        int[] arr = new int[top];
         System.arraycopy(this.arr, 0, arr, 0, arr.length);
         return arr;
     }
+
+    public void increaseArr() {
+        int[] newArr = new int[arr.length * 2];
+        System.arraycopy(arr, 0, newArr, 0, arr.length);
+        arr = newArr;
+    }
+
 }
